@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="Scrup" uuid="41221185-c4e8-4e34-82f4-791f02657704">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://database-2.cqtvfbfp2dbv.ap-southeast-1.rds.amazonaws.com:3306/scrup</jdbc-url>
+    </data-source>
+  </component>
+</project>
