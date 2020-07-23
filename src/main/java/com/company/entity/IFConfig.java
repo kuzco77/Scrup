@@ -15,6 +15,7 @@ public class IFConfig {
     public String user_agent, content;
     public Date reg_date;
 
+
     public static void add2SQL(List<IFConfig> listObjects) {
         Connection con = null;
         PreparedStatement ps = null;
@@ -22,13 +23,14 @@ public class IFConfig {
         try {
             if (!DBConnect.getConnection().isClosed()) {
                 con = DBConnect.getConnection();
-                ps = con.prepareStatement("insert into ifconfig (user_agent, content) values (?,?)");
+                ps = con.prepareStatement("call addLog(?,?,?)");
                 int i = 0;
                 for (IFConfig object : listObjects) {
                     Logger.log("add line " + i + " to bach");
 
                     ps.setString(1, object.user_agent);
                     ps.setString(2, object.content);
+                    ps.setString(3, "net config");
                     ps.addBatch();
                     i++;
                     if (i % 10000 == 0 || i == listObjects.size()) {

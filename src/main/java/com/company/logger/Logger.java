@@ -1,6 +1,6 @@
 package com.company.logger;
 
-import com.company.config.Config;
+import com.company.config.AppConfig;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -20,7 +20,7 @@ public class Logger {
 
         try {
             try {
-                String path = Config.LOG_PATH;
+                String path = AppConfig.LOG_PATH;
                 if (path.charAt(path.length() - 1) != '/') {
                     path = path + "/";
                 }
@@ -55,7 +55,7 @@ public class Logger {
 
         try {
             try {
-                String path = Config.LOG_PATH;
+                String path = AppConfig.LOG_PATH;
                 Writer buffer = new StringWriter();
                 PrintWriter pw = new PrintWriter(buffer);
                 ex.printStackTrace(pw);

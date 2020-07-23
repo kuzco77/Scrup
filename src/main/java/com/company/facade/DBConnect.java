@@ -1,6 +1,6 @@
 package com.company.facade;
 
-import com.company.config.Config;
+import com.company.config.AppConfig;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.sql.Connection;
@@ -25,14 +25,14 @@ public class DBConnect {
     public static Connection getConnection() throws SQLException {
         if (datasource == null) {
             BasicDataSource ds = new BasicDataSource();
-            ds.setDriverClassName(Config.DB_DRIVER);
-            ds.setUrl(Config.CONNECTION_URL);
-            ds.setUsername(Config.DB_USER);
-            ds.setPassword(Config.DB_PWD);
-            ds.setInitialSize(Config.DB_MIN_CONNECTION);
+            ds.setDriverClassName(AppConfig.DB_DRIVER);
+            ds.setUrl(AppConfig.CONNECTION_URL);
+            ds.setUsername(AppConfig.DB_USER);
+            ds.setPassword(AppConfig.DB_PWD);
+            ds.setInitialSize(AppConfig.DB_MIN_CONNECTION);
 //            ds.setMaxOpenPreparedStatements(100);
             ds.setValidationQuery("Select 1");
-            ds.setMaxTotal(Config.DB_MAX_CONNECTION);
+            ds.setMaxTotal(AppConfig.DB_MAX_CONNECTION);
             datasource = ds;
         }
         return datasource.getConnection();
@@ -50,8 +50,8 @@ public class DBConnect {
             if (cnn == null || cnn.isClosed()) {
 
                 Class.forName("com.mysql.cj.jdbc.Driver");
-                url = "jdbc:mysql://" + Config.DB_IP + ":3306/" + Config.DB_NAME + "?autoReconnect=true&useSSL=false&useUnicode=true&characterEncoding=utf-8";
-                cnn = DriverManager.getConnection(url, Config.DB_USER, Config.DB_PWD);
+                url = "jdbc:mysql://" + AppConfig.DB_IP + ":3306/" + AppConfig.DB_NAME + "?autoReconnect=true&useSSL=false&useUnicode=true&characterEncoding=utf-8";
+                cnn = DriverManager.getConnection(url, AppConfig.DB_USER, AppConfig.DB_PWD);
             }
             return true;
         } catch (ClassNotFoundException ex) {
