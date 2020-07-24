@@ -6,17 +6,16 @@ import com.company.logger.Logger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
-public class IFConfig {
+public class CommandLog {
     public int id;
     public String user_agent, content;
     public Date reg_date;
 
 
-    public static void add2SQL(List<IFConfig> listObjects) {
+    public static void add2SQL(List<CommandLog> listObjects) {
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -25,7 +24,7 @@ public class IFConfig {
                 con = DBConnect.getConnection();
                 ps = con.prepareStatement("call addLog(?,?,?)");
                 int i = 0;
-                for (IFConfig object : listObjects) {
+                for (CommandLog object : listObjects) {
                     Logger.log("add line " + i + " to bach");
 
                     ps.setString(1, object.user_agent);
@@ -54,7 +53,6 @@ public class IFConfig {
                 }
                 if (con != null) {
                     con.close();
-//                    DBConnect.Close();
                 }
             } catch (Exception e) {
                 Logger.error(e);

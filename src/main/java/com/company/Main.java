@@ -1,13 +1,12 @@
 package com.company;
 
-import com.company.entity.Config;
-import com.company.entity.IFConfig;
+import com.company.entity.DefaultConfig;
+import com.company.entity.CommandLog;
 import com.company.entity.Terminal;
 import com.company.logger.Logger;
 
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.util.ArrayList;
@@ -32,23 +31,26 @@ public class Main {
     }
 
     private static void otherCommand(String device_name) throws Exception {
-        ArrayList<Terminal> list = new ArrayList<>();
-        list = Terminal.getTerminal(device_name);
-        for (Terminal ter: list) {
+        ArrayList<Terminal> list = Terminal.getTerminal(device_name);
+        for (Terminal ter : list) {
             String[] cmd = {"/bin/sh", "-c", ter.command};
             String result = executeTerminal(cmd);
-            if (result.isEmpty()) {
-
+            if (!result.isEmpty()) {
+                ArrayList<CommandLog> lcl = new ArrayList<>();
+                CommandLog cl = new CommandLog();
+                cl.content = result;
+                cl.user_agent = device_name;
+                lcl.add(cl);
+                CommandLog.add2SQL(lcl);
             }
         }
     }
 
     private static void turnOnVPN(String device_name) throws Exception {
-        ArrayList<Config> listConf = new ArrayList<>();
-        listConf = Config.getConfig(device_name);
+        ArrayList<DefaultConfig> listConf = DefaultConfig.getVPNConfig(device_name, DefaultConfig.DEFAULT_CONFIG.VPN);
         boolean status = false;
         String service_name = "GHDC VPN";
-        for (Config conf: listConf) {
+        for (DefaultConfig conf : listConf) {
             status = conf.status;
             service_name = conf.service_name;
         }
@@ -62,32 +64,29 @@ public class Main {
         }
 
 
-
     }
 
-    private static void updateIP4Mac(String device_name) {
-        try {
-            String[] cmd = {"/bin/sh", "-c", "/sbin/ifconfig"};
-            String result = executeTerminal(cmd);
-
-            IFConfig config = new IFConfig();
-            config.user_agent = device_name;
-            config.content = result;
-            ArrayList<IFConfig> list = new ArrayList<>();
-            list.add(config);
-            IFConfig.add2SQL(list);
-        }
-        catch(IOException e1) {
-            Logger.error(e1);
+    private static void updateIP4Mac(String device_name) throws Exception {
+        ArrayList<DefaultConfig> dcs = DefaultConfig.getVPNConfig(device_name, DefaultConfig.DEFAULT_CONFIG.netConfig);
+        String[] cmd = new String[0];
+        if (dcs.size() == 0) {
+            cmd = new String[] {"/bin/sh", "-c", "/sbin/ifconfig"};
+        } else {
+            for (DefaultConfig dc: dcs) {
+                String realCommand = dc.command;
+                cmd = new String[] {"/bin/sh", "-c", realCommand};
+            }
         }
 
-        catch(InterruptedException e2) {
-            Logger.error(e2);
-        }
+        String result = executeTerminal(cmd);
 
-        catch (Exception e3) {
-            Logger.error(e3);
-        }
+        CommandLog config = new CommandLog();
+        config.user_agent = device_name;
+        config.content = result;
+        ArrayList<CommandLog> list = new ArrayList<>();
+        list.add(config);
+        CommandLog.add2SQL(list);
+
     }
 
     private static String executeTerminal(String[] command) throws Exception {
