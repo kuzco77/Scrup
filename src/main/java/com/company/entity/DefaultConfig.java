@@ -30,8 +30,8 @@ public class DefaultConfig {
             if (!DBConnect.getConnection().isClosed()) {
                 con = DBConnect.getConnection();
                 switch (setting) {
-                    case VPN: ps = con.prepareStatement("call getVPNConfig(?)");
-                    case netConfig: ps = con.prepareStatement("call getNetConfig(?)");
+                    case VPN: ps = con.prepareStatement("call getVPNConfig(?)"); break;
+                    case netConfig: ps = con.prepareStatement("call getNetConfig(?)"); break;
                 }
 
                 ps.setString(1, device_name);
